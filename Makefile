@@ -3,17 +3,39 @@ OPT			:= -Os
 CFLAGS		:= $(OPT) -std=gnu11 -ffreestanding -nostdinc -nostdlib
 CXXFLAGS	:= $(OPT) -std=gnu++1y -ffreestanding -nostdinc -nostdlib -fno-exceptions -fno-rtti
 
+# resolve tool name
+ifeq ($(OS),Windows_NT)
+# for Windows
 ifeq ($(arch),x64)
 	CORSS		:= x86_64-pc-linux-gnu-
+else
+	CORSS		:= i686-pc-linux-gnu-
+endif
+
+else
+UNAME = ${shell uname}
+ifeq ($(UNAME),Linux)
+# for Linux
+# LDFLAG=-mi386linux
+endif
+ifeq ($(UNAME),Darwin)
+# for MacOSX
+CROSS=i386-none-elf-
+endif
+endif
+
+ifeq ($(arch),x64)
 	CFLAGS		+= -D__x86_64__ -m64 -mcmodel=kernel
 	CXXFLAGS	+= -D__x86_64__ -m64 -mcmodel=kernel
 	LDFLAGS		:= -T linker.ld -z max-page-size=0x1000
 else
-	CORSS		:= i686-pc-linux-gnu-
-	CFLAGS		+= -D__x86__ 
-	CXXFLAGS	+= -D__x86__
+	CFLAGS		+= -D__x86__ -m32
+	CXXFLAGS	+= -D__x86__ -m32
 	LDFLAGS		:= -T linker32.ld
 endif
+
+#define yourself
+#CORSS		:= i686-pc-linux-gnu-
 
 TARGET=kernel.elf
 ISO=boot.iso
