@@ -145,9 +145,9 @@ gdt_flush:
 
 		#enable long mode
 		movl	$EFER,				%ecx
-		rdmsr										# rdmsr <= ECXで指定されたMSRを　EDX,EAXに読み込む
+		rdmsr										# read msr
 		bts		$8,					%eax			# LME bit = 1
-		wrmsr										# wrmsr <= EDX,EAXの値をECXで指定されたMSRに書き込む
+		wrmsr										# write msr 
 
 		#enable Paging
 		movl    %cr0, 			%eax
@@ -155,7 +155,6 @@ gdt_flush:
 		movl    %eax, 			%cr0
 
 		ljmp	$GDT_KC64,		$.entry_long
-
 
 .code64
 .entry_long:
@@ -169,13 +168,6 @@ gdt_flush:
     	mov 	%ax, 				%es
     	mov 	%ax, 				%ss
 
-#if 0
-		# Just in Case
-		pushq 	%rsi
-    	pushq 	%rdi
-    	movq	$(KERNEL_VMA_BASE),	%rax
-		addq	%rax,	%rsi
-#endif
 		# Setup args 1st: %rdi 2nd:%rsi	
 		movq	mb_magic,	%rdi
 		movq	mb_addr,	%rsi
