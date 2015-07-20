@@ -1,7 +1,7 @@
 # build
 OPT			:= -Os
-CFLAGS		:= $(OPT) -std=gnu11 -ffreestanding -nostdinc -nostdlib
-CXXFLAGS	:= $(OPT) -std=gnu++1y -ffreestanding -nostdinc -nostdlib -fno-exceptions -fno-rtti
+CFLAGS		:= $(OPT) -ffreestanding -nostdinc -nostdlib
+CXXFLAGS	:= $(OPT) -ffreestanding -nostdinc -nostdlib -fno-exceptions -fno-rtti
 
 # resolve tool name
 ifeq ($(OS),Windows_NT)
@@ -16,7 +16,7 @@ else
 UNAME = ${shell uname}
 ifeq ($(UNAME),Linux)
 # for Linux
-# LDFLAG=-mi386linux
+LDFLAGS = -melf_i386
 endif
 ifeq ($(UNAME),Darwin)
 # for MacOSX
@@ -27,11 +27,11 @@ endif
 ifeq ($(arch),x64)
 	CFLAGS		+= -D__x86_64__ -m64 -mcmodel=kernel
 	CXXFLAGS	+= -D__x86_64__ -m64 -mcmodel=kernel
-	LDFLAGS		:= -T linker.ld -z max-page-size=0x1000
+	LDFLAGS		= -T linker.ld -z max-page-size=0x1000
 else
 	CFLAGS		+= -D__x86__ -m32
 	CXXFLAGS	+= -D__x86__ -m32
-	LDFLAGS		:= -T linker32.ld
+	LDFLAGS		+= -T linker32.ld
 endif
 
 #define yourself

@@ -15,7 +15,7 @@ SECTIONS
 
     . += KVMA_BASE;
     .text : AT(ADDR(.text) - KVMA_BASE) {
-        *(.text)
+        *(.text*)
         _rodata_start = .;
         *(.rodata)
         _rodata_end = .;
@@ -24,7 +24,7 @@ SECTIONS
     .data : AT(ADDR(.data) - KVMA_BASE) {
         _data_start = .;
         *(.data)
-        _data_end = .;
+        data_end = .;
     }
 
     .bss :  AT(ADDR(.bss) - KVMA_BASE) {
@@ -42,5 +42,10 @@ SECTIONS
 
     . = ALIGN(0x1000);
     kernel_end = . - KVMA_BASE;
+	
+	/DISCARD/ : {
+		*(.eh_frame)
+		*(.comment)
+	}
 }
 
