@@ -19,7 +19,7 @@ ifeq ($(UNAME),Linux)
 ifeq ($(arch),x64)
 	
 else
-	LDFLAG=-mi386linux
+	LDFLAGS		:=-melf_i386
 endif
 
 endif
